@@ -1,0 +1,16 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "Title",
+      "content": "lorem ipsum dolor sit amet, consectetur adip",
+      "posting": 1
+    }
+  ],
+  "users": [
+    {
+      "username": "hafief",
+      "password": "123"
+    }
+  ]
+}
