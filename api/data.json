@@ -11,6 +11,12 @@
       "isAdmin": true,
       "username": "hafief_m_aziz",
       "password": "123"
+    },
+    {
+      "isAdmin": false,
+      "username": "hafief123",
+      "password": "123",
+      "id": 3
     }
   ],
   "articles": [

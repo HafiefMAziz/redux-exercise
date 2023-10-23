@@ -7,6 +7,7 @@ const initialState = {
   loading: false,
   loggedUser: {},
   error: null,
+  message: null,
 };
 
 export const loginUser = createAsyncThunk("users/loginUser", async (userLogin) => {
@@ -30,6 +31,30 @@ export const loginUser = createAsyncThunk("users/loginUser", async (userLogin) =
   }
 });
 
+export const registerUser = createAsyncThunk("users/registerUser", async (registeredUser) => {
+  console.log(`registerUser ${registeredUser.username}`);
+  try {
+    const users = await axios({
+      method: "GET",
+      url: `${URL}`,
+    });
+    const matchUsername = users.data.find(user => user.username === registeredUser.username)
+    console.log(users.data);
+    if(!matchUsername){
+      const result = await axios({
+        method: "POST",
+        url: `${URL}`,
+        data: registeredUser
+      });
+      return result.data
+    }else{
+      return {errorUsername: "Username already in use!"}
+    }
+  } catch (error) {
+    return { message: "Error registerUser", error: error };
+  }
+});
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -48,6 +73,22 @@ export const userSlice = createSlice({
       }
     });
     builder.addCase(loginUser.rejected, (state, action) => {
+      state.loading = false;
+      state.loggedUser = {};
+      state.error = action.error.message;
+    });
+    builder.addCase(registerUser.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(registerUser.fulfilled, (state, action) => {
+      state.loading = false;
+      if(action.payload.errorUsername){
+        state.error = action.payload.errorUsername;
+      }else{
+        state.message = {message: `Succes Register`, user: action.payload}
+      }
+    });
+    builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
       state.loggedUser = {};
       state.error = action.error.message;
